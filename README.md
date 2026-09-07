@@ -1,10 +1,12 @@
-# ComfyUI_NAIDGenerator
+# ComfyUI_NAIDGenerator-neo
 
-A [ComfyUI](https://github.com/comfyanonymous/ComfyUI) extension for generating image via NovelAI API.
+A [ComfyUI](https://github.com/comfyanonymous/ComfyUI) extension for generating images through the NovelAI API.
+
+This repository is a modified fork of [bedovyy/ComfyUI_NAIDGenerator](https://github.com/bedovyy/ComfyUI_NAIDGenerator). It adds V4/V4.5 Vibe encoding support and removes automatic image saving.
 
 ## Installation
 
-- `git clone https://github.com/bedovyy/ComfyUI_NAIDGenerator` into the `custom_nodes` directory.
+- `git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git` into the `custom_nodes` directory.
 - or 'Install via Git URL' from [Comfyui Manager](https://github.com/ltdrdata/ComfyUI-Manager)
 
 ## Setting up NAI account
