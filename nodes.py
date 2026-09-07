@@ -1,7 +1,5 @@
 import copy
 import io
-from pathlib import Path
-import folder_paths
 import zipfile
 
 from .utils import *
@@ -170,7 +168,6 @@ class NetworkOption:
 class GenerateNAID:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
 
     @classmethod
     def INPUT_TYPES(s):
@@ -321,13 +318,6 @@ class GenerateNAID:
             zipped = zipfile.ZipFile(io.BytesIO(zipped_bytes))
             image_bytes = zipped.read(zipped.infolist()[0]) # only support one n_samples
 
-            ## save original png to comfy output dir
-            full_output_folder, filename, counter, subfolder, filename_prefix = folder_paths.get_save_image_path("NAI_autosave", self.output_dir)
-            file = f"{filename}_{counter:05}_.png"
-            d = Path(full_output_folder)
-            d.mkdir(exist_ok=True)
-            (d / file).write_bytes(image_bytes)
-
             image = bytes_to_image(image_bytes, keep_alpha)
         except Exception as e:
             if "ignore_errors" in option and option["ignore_errors"]:
@@ -338,7 +328,7 @@ class GenerateNAID:
         return (image,)
 
 
-def base_augment(access_token, output_dir, limit_opus_free, ignore_errors, req_type, image, options=None):
+def base_augment(access_token, limit_opus_free, ignore_errors, req_type, image, options=None):
     image = image.movedim(-1, 1)
     w, h = (image.shape[3], image.shape[2])
     image = image.movedim(1, -1)
@@ -369,13 +359,6 @@ def base_augment(access_token, output_dir, limit_opus_free, ignore_errors, req_t
         zipped = zipfile.ZipFile(io.BytesIO(zipped_bytes))
         image_bytes = zipped.read(zipped.infolist()[0]) # only support one n_samples
 
-        ## save original png to comfy output dir
-        full_output_folder, filename, counter, subfolder, filename_prefix = folder_paths.get_save_image_path("NAI_autosave", output_dir)
-        file = f"{filename}_{counter:05}_.png"
-        d = Path(full_output_folder)
-        d.mkdir(exist_ok=True)
-        (d / file).write_bytes(image_bytes)
-
         result_image = bytes_to_image(image_bytes)
     except Exception as e:
         if ignore_errors:
@@ -388,7 +371,6 @@ def base_augment(access_token, output_dir, limit_opus_free, ignore_errors, req_t
 class RemoveBGAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -402,12 +384,11 @@ class RemoveBGAugment:
     FUNCTION = "augment"
     CATEGORY = "NovelAI/director_tools"
     def augment(self, image, limit_opus_free, ignore_errors):
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "bg-removal", image)
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "bg-removal", image)
 
 class LineArtAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -421,12 +402,11 @@ class LineArtAugment:
     FUNCTION = "augment"
     CATEGORY = "NovelAI/director_tools"
     def augment(self, image, limit_opus_free, ignore_errors):
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "lineart", image)
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "lineart", image)
 
 class SketchAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -440,12 +420,11 @@ class SketchAugment:
     FUNCTION = "augment"
     CATEGORY = "NovelAI/director_tools"
     def augment(self, image, limit_opus_free, ignore_errors):
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "sketch", image)
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "sketch", image)
 
 class ColorizeAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -461,12 +440,11 @@ class ColorizeAugment:
     FUNCTION = "augment"
     CATEGORY = "NovelAI/director_tools"
     def augment(self, image, limit_opus_free, ignore_errors, defry, prompt):
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "colorize", image, options={ "defry": defry, "prompt": prompt })
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "colorize", image, options={ "defry": defry, "prompt": prompt })
 
 class EmotionAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
 
     strength_list = ["normal", "slightly_weak", "weak", "even_weaker", "very_weak", "weakest"]
     @classmethod
@@ -491,12 +469,11 @@ class EmotionAugment:
     def augment(self, image, limit_opus_free, ignore_errors, mood, strength, prompt):
         prompt = f"{mood};;{prompt}"
         defry = EmotionAugment.strength_list.index(strength)
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "emotion", image, options={ "defry": defry, "prompt": prompt })
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "emotion", image, options={ "defry": defry, "prompt": prompt })
 
 class DeclutterAugment:
     def __init__(self):
         self.access_token = get_access_token()
-        self.output_dir = folder_paths.get_output_directory()
     @classmethod
     def INPUT_TYPES(s):
         return {
@@ -510,7 +487,7 @@ class DeclutterAugment:
     FUNCTION = "augment"
     CATEGORY = "NovelAI/director_tools"
     def augment(self, image, limit_opus_free, ignore_errors):
-        return base_augment(self.access_token, self.output_dir, limit_opus_free, ignore_errors, "declutter", image)
+        return base_augment(self.access_token, limit_opus_free, ignore_errors, "declutter", image)
 class V4BasePrompt:
     @classmethod
     def INPUT_TYPES(s):

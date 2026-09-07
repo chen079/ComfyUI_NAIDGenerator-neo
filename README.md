@@ -31,7 +31,7 @@ Simply connect `GenerateNAID` node and `SaveImage` node.
 
 ![generate](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/1328896d-7d4b-4d47-8ec2-d1c4e8e2561c)
 
-Note that all generated images via `GeneratedNAID` node are saved as `output/NAI_autosave_12345_.png` for keeping original metadata.
+`GenerateNAID` returns the generated image without saving it automatically. Connect a `SaveImage` node when you want to save the result.
 
 ### Img2img
 

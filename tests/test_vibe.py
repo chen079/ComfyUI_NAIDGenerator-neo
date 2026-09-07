@@ -4,7 +4,6 @@ import io
 import json
 from pathlib import Path
 import sys
-import tempfile
 import types
 import unittest
 from unittest.mock import Mock, patch
@@ -21,8 +20,7 @@ package.__path__ = [str(ROOT)]
 comfy = types.ModuleType("comfy")
 comfy.utils = types.ModuleType("comfy.utils")
 comfy.utils.common_upscale = lambda samples, w, h, method, crop: torch.nn.functional.interpolate(samples, size=(h, w), mode=method, align_corners=False)
-folder_paths = Mock()
-with patch.dict(sys.modules, {"naid_test": package, "comfy": comfy, "comfy.utils": comfy.utils, "folder_paths": folder_paths}):
+with patch.dict(sys.modules, {"naid_test": package, "comfy": comfy, "comfy.utils": comfy.utils}):
     for name in ("utils", "nodes"):
         spec = importlib.util.spec_from_file_location(f"naid_test.{name}", ROOT / f"{name}.py")
         module = importlib.util.module_from_spec(spec)
@@ -45,10 +43,6 @@ class VibeTests(unittest.TestCase):
         self.post = patch.object(requests, "post", side_effect=AssertionError("Unexpected HTTP request"))
         self.http = self.post.start()
         self.addCleanup(self.post.stop)
-        self.directory = tempfile.TemporaryDirectory()
-        self.addCleanup(self.directory.cleanup)
-        folder_paths.get_output_directory.return_value = self.directory.name
-        folder_paths.get_save_image_path.return_value = (self.directory.name, "test", 1, "", "test")
         png = io.BytesIO()
         Image.new("RGB", (64, 64)).save(png, format="PNG")
         archive = io.BytesIO()
