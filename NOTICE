@@ -1,0 +1,10 @@
+ComfyUI_NAIDGenerator-neo
+
+This project began as a fork of ComfyUI_NAIDGenerator:
+https://github.com/bedovyy/ComfyUI_NAIDGenerator
+
+The Neo project uses its own node namespace, module structure, request client,
+image conversion module, prompt conversion module, tests, and documentation.
+It remains distributed under GNU GPL version 3. NovelAI and ComfyUI names and
+trademarks belong to their respective owners. This is not an official NovelAI
+or ComfyUI project.

@@ -1,15 +1,9 @@
 [project]
-name = "comfyui_naidgenerator"
-description = "This extension helps generate images through NAI."
-version = "1.0.9"
+name = "comfyui-naidgenerator-neo"
+description = "NovelAI image generation nodes for ComfyUI under the NAI Neo namespace."
+version = "0.1.0"
 license = { file = "LICENSE" }
-dependencies = ["python-dotenv", "argon2-cffi"]
+dependencies = ["python-dotenv"]
 
 [project.urls]
-Repository = "https://github.com/bedovyy/ComfyUI_NAIDGenerator"
-#  Used by Comfy Registry https://comfyregistry.org
-
-[tool.comfy]
-PublisherId = "bedovyy"
-DisplayName = "ComfyUI_NAIDGenerator"
-Icon = ""
+Repository = "https://github.com/chen079/ComfyUI_NAIDGenerator-neo"

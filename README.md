@@ -1,207 +1,60 @@
 # ComfyUI_NAIDGenerator-neo
 
-A [ComfyUI](https://github.com/comfyanonymous/ComfyUI) extension for generating images through the NovelAI API.
+面向 ComfyUI 的 NovelAI 图像生成节点。项目使用独立的节点命名空间和模块化实现，支持文本生成、图生图、局部重绘、V3/V4 Vibe Transfer 以及 Director Tools。
 
-This repository is a modified fork of [bedovyy/ComfyUI_NAIDGenerator](https://github.com/bedovyy/ComfyUI_NAIDGenerator). It adds V4/V4.5 Vibe encoding support and removes automatic image saving.
+## 安装
 
-## Installation
+在 ComfyUI 的 `custom_nodes` 目录执行：
 
-- `git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git` into the `custom_nodes` directory.
-- or 'Install via Git URL' from [Comfyui Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-
-## Setting up NAI account
-
-Before using the nodes, you should set NAI_ACCESS_TOKEN on `ComfyUI/.env` file.
-
-```
-NAI_ACCESS_TOKEN=<ACCESS_TOKEN>
+```bash
+git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git
 ```
 
-You can get persistent API token by **User Settings > Account > Get Persistent API Token** on NovelAI webpage.
+安装 `requirements.txt` 后重启 ComfyUI。节点位于 `NAI Neo` 分类。
 
-Otherwise, you can get access token which is valid for 30 days using [novelai-api](https://github.com/Aedial/novelai-api).
+## 配置
 
-## Usage
+在 ComfyUI 的 `.env` 文件中设置 NovelAI Persistent API Token：
 
-The nodes are located at `NovelAI` category.
+```dotenv
+NAI_ACCESS_TOKEN=你的令牌
+```
 
-![image](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/8ab1ecc0-2ba8-4e38-8810-727e50a20923)
+项目只支持 `NAI_ACCESS_TOKEN`，不会在导入节点时自动安装依赖，也不会通过用户名和密码登录。
 
-### Txt2img
+## 节点
 
-Simply connect `GenerateNAID` node and `SaveImage` node.
+- `NAI Neo · Generate`：生成图片，只返回 ComfyUI `IMAGE`，不会自动保存文件。
+- `NAI Neo · ModelOption`：选择 NovelAI 模型。
+- `NAI Neo · Img2ImgOption`：配置图生图。
+- `NAI Neo · InpaintingOption`：配置局部重绘。
+- `NAI Neo · EncodeVibe`：为 V4/V4.5 编码参考图。
+- `NAI Neo · VibeTransferOption`：设置 Vibe 强度并组合多个参考。
+- `NAI Neo · NetworkOption`：设置生成请求的超时、重试和错误忽略策略。
+- `NAI Neo · RemoveBG`、`LineArt`、`Sketch`、`Colorize`、`Emotion`、`Declutter`：NovelAI Director Tools。
 
-![generate](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/1328896d-7d4b-4d47-8ec2-d1c4e8e2561c)
-
-`GenerateNAID` returns the generated image without saving it automatically. Connect a `SaveImage` node when you want to save the result.
-
-### Img2img
-
-Connect `Img2ImgOptionNAID` node to `GenerateNAID` node and put original image.
-
-![image](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/15ff8961-4f6b-4f23-86bf-34b86ace45c0)
-
-Note that width and height of the source image will be resized to generation size.
-
-### Inpainting
-
-Connect `InpaintingOptionNAID` node to `GenerateNAID` node and put original image and mask image.
-
-![image](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/5ed1ad77-b90e-46be-8c37-9a5ee0935a3d)
-
-Note that both source image and mask will be resized fit to generation size.
-
-(You don't need `MaskImageToNAID` node to convert mask image to NAID mask image.)
-
-### Vibe Transfer
-
-Connect `VibeTransferOptionNAID` node to `GenerateNAID` node and put reference image.
-
-![Comfy_workflow](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/8c6c1c2e-f29d-42a1-b615-439155cb3164)
-
-You can also relay Img2ImgOption on it.
-
-![image](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/acf0496c-8c7c-48f4-9530-18e6a23669d5)
-
-Note that width and height of the source images will be resized to generation size. **This will change aspect ratio of source images.**
-
-#### Multiple Vibe Transfer
-
-Just connect multiple `VibeTransferOptionNAID` nodes to `GenerateNAID` node.
-
-![preview_vibe_2](https://github.com/user-attachments/assets/2d56c0f7-bcd5-48ff-b436-012ea43604fe)
-
-#### V4 / V4.5 Vibe Encoding
-
-Use `EncodeVibeNAID` before `VibeTransferOptionNAID`:
+## V4 / V4.5 Vibe Transfer
 
 ```text
-Load Image -> EncodeVibe.image
-EncodeVibe.encoded_vibe -> VibeTransferOption.encoded_vibe
-VibeTransferOption -> Generate.option
+Load Image → NAI Neo · EncodeVibe
+NAI Neo · EncodeVibe → NAI Neo · VibeTransferOption.encoded_vibe
+NAI Neo · VibeTransferOption → NAI Neo · Generate.option
 ```
 
-Leave `VibeTransferOption.image` disconnected. Set the model and `information_extracted` on `EncodeVibe`, and `strength` on `VibeTransferOption`. Generate uses the encoding's model; any connected `ModelOption` must select the same model. For multiple references, use one encoder per image and chain the VibeTransferOption nodes through `option`.
+`information_extracted` 在 Encode Vibe 节点设置，修改它或参考图会重新编码。`strength` 在 Vibe Transfer Option 节点设置，修改它可以复用未失效的编码结果。NovelAI 通常对一次新编码收取 2 Anlas；ComfyUI 缓存失效或重启后可能再次编码。
 
-Encoding preserves the source dimensions and accepts one image per node. Raw image input on VibeTransferOption remains available for V3 models.
+V3 模型可以把原图直接连接到 Vibe Transfer Option 的 `image`。V4/V4.5 必须先经过 Encode Vibe。编码模型与生成模型必须一致。
 
-[NovelAI charges 2 Anlas per encoding](https://docs.novelai.net/en/image/vibetransfer/). ComfyUI can reuse the encoder's cached output while its inputs stay unchanged, including when changing downstream strength, prompts or seed. This is not a disk cache: restarting ComfyUI, clearing/evicting its cache, or changing encoder inputs can require another paid encoding. Encoding requests are not automatically retried.
+## 保存图片
 
-### ModelOption
+Generate 和 Director 节点不会写入 `output`。需要保存时，请连接 ComfyUI 自带的 `SaveImage` 节点；只想查看时可以连接预览节点。
 
-The default model of `GenerateNAID` is `nai-diffusion-4-5-full` (NAI Diffusion V4.5 Full).
+## 迁移说明
 
-If you want to change model, put `ModelOptionNAID` node to `GenerateNAID` node.
+本项目使用 `NAINeo...` 节点 ID 及 `NAI_NEO_OPTION`、`NAI_NEO_VIBE` 端口类型。原项目节点不会被注册，旧工作流需要重新添加并连接 NAI Neo 节点。
 
-![ModelOption](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/0b484edb-bcb5-428a-b2af-1372a9d7a34f)
+## 致谢与许可
 
-### NetworkOption
+本项目最初基于 [bedovyy/ComfyUI_NAIDGenerator](https://github.com/bedovyy/ComfyUI_NAIDGenerator) 开展，感谢原作者和贡献者提供的基础工作。
 
-You can set timeout or retry option from `NetworkOption` node.
-Moreover, you can ignore error by `ignore_errors`. In that case, the result will be 1x1 size grayscale image.
-Without this node, the request never retry and wait response forever, and stop the queue when error occurs
-
-![preview_network](https://github.com/user-attachments/assets/d82b0ff2-c57c-4870-9024-8d78261a8fea)
-
-**Note that if you set timeout too short, you may not get image but spend Anlas.**
-
-### PromptToNAID
-
-ComfyUI use `()` or `(word:weight)` for emphasis, but NovelAI use `{}` and `[]`. This node convert ComfyUI's prompt to NovelAI's.
-
-Optionally, you can choose weight per brace. If you set `weight_per_brace` to 0.10, `(word:1.1)` will convert to `{word}` instead of `{{word}}`.
-
-![image](https://github.com/bedovyy/ComfyUI_NAIDGenerator/assets/137917911/25c48350-7268-4d6f-81fe-9eb080fc6e5a)
-
-### Director Tools
-
-![image](https://github.com/user-attachments/assets/e205a51e-59dc-4d5a-94c8-29715ed98739)
-
-You can find director tools like `LineArtNAID` or `EmotionNAID` on NovelAI > director_tools.
-
-![augment_example](https://github.com/user-attachments/assets/5833e9fb-f92e-4d53-9069-58ca8503a3e7)
-
-### V4 Support (Preview)
-
-The node now supports NAI's V4 architecture through the nai-diffusion-4-curated-preview model. This is a preview release of V4 with some limitations:
-
-- **Important Notes:**
-  - This is a preview version of V4 and some features are limited
-  - Inpainting will automatically use V3 model (but works with V4-generated images)
-  - Vibe transfer requires `EncodeVibeNAID`; see V4 / V4.5 Vibe Encoding above
-  - Full V4 feature support will come with the official V4 release
-
-
-### V4.5 Support (Curated Preview)
-
-Support has been added for **NAI Diffusion 4.5 Curated Preview**, an updated version of V4 with further improvements in detail, contrast, and prompt responsiveness.
-
-- **Model Name:**  
-  ```python
-  model = "nai-diffusion-4-5-curated-preview"
-  ```
-
-- **Availability:**  
-  Selectable through `ModelOptionNAID` node under the name **NAI Diffusion 4.5 Curated Preview**.
-
-- **Compatibility Notes:**
-  - Works the same as V4 preview, with the same limitations:
-    - Inpainting will still default to V4 backend
-    - Vibe transfer requires `EncodeVibeNAID`
-  - Prompt formatting remains the same as for V4 (`V4BasePrompt` and `V4NegativePrompt` nodes are compatible)
-
-
-#### New Model Option
-
-NAI Diffusion V4 Curated Preview is now available in the ModelOptionNAID node:
-
-```python
-model = "nai-diffusion-4-curated-preview"
-```
-
-#### V4 Prompt Handling
-
-Two new nodes have been added for V4 prompt handling:
-
-##### V4BasePrompt
-
-A node for handling V4 positive prompts:
-
-```
-V4BasePrompt -----> positive
-               GenerateNAID
-```
-
-##### V4NegativePrompt
-
-A node for handling V4 negative prompts:
-
-```
-V4NegativePrompt -> negative
-                 GenerateNAID
-```
-
-#### Example V4 Workflow
-
-Here's a basic V4 setup:
-
-```
-V4BasePrompt -----> positive
-V4NegativePrompt -> negative  GenerateNAID
-ModelOption ------> option
-```
-
-#### Work In Progress Features
-
-The following V4 features are currently in development:
-
-```python
-"""
-- V4PromptConfig: Advanced prompt configuration
-  - Coordinate-based prompting
-  - Order-based prompting
-- V4CharacterCaption: Character-specific prompting with positioning
-"""
-```
-
-Note: Basic img2img functionality works with V4 preview. For inpainting, the node will automatically use V3 model but can still work on V4-generated images. Use `EncodeVibeNAID` for V4/V4.5 Vibe Transfer.
+此后项目采用独立的节点标识、代码结构、请求模块、图片转换模块、提示词模块、测试和文档。项目仍按照原项目采用的 GNU GPL v3 发布；完整条款见 [LICENSE](LICENSE)。NovelAI、ComfyUI 及相关名称和商标归各自权利人所有，本项目不是 NovelAI 或 ComfyUI 官方项目。
