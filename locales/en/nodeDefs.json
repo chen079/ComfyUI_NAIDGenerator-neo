@@ -1,0 +1,142 @@
+{
+  "NAINeoPrompt": {
+    "display_name": "NAI Neo · Prompt Syntax",
+    "description": "Convert ComfyUI prompt weights to NovelAI syntax.",
+    "inputs": {
+      "text": { "name": "Text" },
+      "weight_per_brace": { "name": "Weight per brace" },
+      "syntax_mode": { "name": "Syntax mode" }
+    },
+    "outputs": { "0": { "name": "Prompt" } }
+  },
+  "NAINeoMaskImage": {
+    "display_name": "NAI Neo · Prepare Mask",
+    "inputs": { "image": { "name": "Image" } },
+    "outputs": { "0": { "name": "Mask image" } }
+  },
+  "NAINeoModelOption": {
+    "display_name": "NAI Neo · Model Option",
+    "inputs": { "model": { "name": "Model" }, "option": { "name": "Previous option" } },
+    "outputs": { "0": { "name": "Option" } }
+  },
+  "NAINeoImg2ImgOption": {
+    "display_name": "NAI Neo · Image to Image",
+    "inputs": {
+      "image": { "name": "Image" },
+      "strength": { "name": "Strength" },
+      "noise": { "name": "Noise" }
+    },
+    "outputs": { "0": { "name": "Option" } }
+  },
+  "NAINeoInpaintingOption": {
+    "display_name": "NAI Neo · Inpainting",
+    "inputs": {
+      "image": { "name": "Image" },
+      "mask": { "name": "Mask" },
+      "add_original_image": { "name": "Add original image" }
+    },
+    "outputs": { "0": { "name": "Option" } }
+  },
+  "NAINeoEncodeVibe": {
+    "display_name": "NAI Neo · Encode Vibe",
+    "description": "Encode one reference image for V4 or V4.5 Vibe Transfer.",
+    "inputs": {
+      "image": { "name": "Reference image" },
+      "model": { "name": "Model" },
+      "information_extracted": { "name": "Information extracted", "tooltip": "Controls how much information is extracted. Changing this value requires a new paid encoding." },
+      "timeout_sec": { "name": "Timeout (seconds)" }
+    },
+    "outputs": { "0": { "name": "Encoded Vibe" } }
+  },
+  "NAINeoVibeTransferOption": {
+    "display_name": "NAI Neo · Vibe Transfer",
+    "inputs": {
+      "information_extracted": { "name": "Information extracted", "tooltip": "Used only when a raw V3 reference image is connected." },
+      "strength": { "name": "Strength" },
+      "image": { "name": "V3 reference image" },
+      "option": { "name": "Previous option" },
+      "encoded_vibe": { "name": "Encoded V4 Vibe" }
+    },
+    "outputs": { "0": { "name": "Option" } }
+  },
+  "NAINeoNetworkOption": {
+    "display_name": "NAI Neo · Network Option",
+    "inputs": {
+      "ignore_errors": { "name": "Ignore errors" },
+      "timeout_sec": { "name": "Timeout (seconds)" },
+      "retry": { "name": "Retries" },
+      "option": { "name": "Previous option" }
+    },
+    "outputs": { "0": { "name": "Option" } }
+  },
+  "NAINeoGenerate": {
+    "display_name": "NAI Neo · Generate",
+    "description": "Generate an image with NovelAI. The result is returned to ComfyUI without automatic saving.",
+    "inputs": {
+      "limit_opus_free": { "name": "Limit for free Opus generation", "tooltip": "Limit image size and steps to the free Opus allowance." },
+      "width": { "name": "Width" },
+      "height": { "name": "Height" },
+      "positive": { "name": "Positive prompt" },
+      "negative": { "name": "Negative prompt" },
+      "steps": { "name": "Steps" },
+      "cfg": { "name": "Prompt guidance" },
+      "variety": { "name": "Variety" },
+      "decrisper": { "name": "Decrisper" },
+      "smea": { "name": "SMEA" },
+      "sampler": { "name": "Sampler" },
+      "scheduler": { "name": "Noise schedule" },
+      "seed": { "name": "Seed" },
+      "uncond_scale": { "name": "Undesired content strength" },
+      "cfg_rescale": { "name": "Prompt guidance rescale" },
+      "keep_alpha": { "name": "Keep alpha channel" },
+      "option": { "name": "Option" }
+    },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoRemoveBG": {
+    "display_name": "NAI Neo · Remove Background",
+    "inputs": { "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" } },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoLineArt": {
+    "display_name": "NAI Neo · Line Art",
+    "inputs": { "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" } },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoSketch": {
+    "display_name": "NAI Neo · Sketch",
+    "inputs": { "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" } },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoColorize": {
+    "display_name": "NAI Neo · Colorize",
+    "inputs": {
+      "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" },
+      "defry": { "name": "Defry" }, "prompt": { "name": "Prompt" }
+    },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoEmotion": {
+    "display_name": "NAI Neo · Emotion",
+    "inputs": {
+      "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" },
+      "mood": { "name": "Mood" }, "strength": { "name": "Strength" }, "prompt": { "name": "Prompt" }
+    },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoDeclutter": {
+    "display_name": "NAI Neo · Declutter",
+    "inputs": { "image": { "name": "Image" }, "limit_opus_free": { "name": "Limit for free Opus generation" }, "ignore_errors": { "name": "Ignore errors" } },
+    "outputs": { "0": { "name": "Image" } }
+  },
+  "NAINeoV4BasePrompt": {
+    "display_name": "NAI Neo · V4 Base Prompt",
+    "inputs": { "base_caption": { "name": "Base caption" } },
+    "outputs": { "0": { "name": "Prompt" } }
+  },
+  "NAINeoV4NegativePrompt": {
+    "display_name": "NAI Neo · V4 Negative Prompt",
+    "inputs": { "negative_caption": { "name": "Negative caption" } },
+    "outputs": { "0": { "name": "Negative prompt" } }
+  }
+}

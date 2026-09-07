@@ -1,0 +1,124 @@
+{
+  "NAINeoPrompt": {
+    "display_name": "NAI Neo · 提示词语法转换",
+    "description": "将 ComfyUI 提示词权重转换为 NovelAI 语法。",
+    "inputs": {
+      "text": { "name": "文本" },
+      "weight_per_brace": { "name": "每层括号权重" },
+      "syntax_mode": { "name": "语法模式" }
+    },
+    "outputs": { "0": { "name": "提示词" } }
+  },
+  "NAINeoMaskImage": {
+    "display_name": "NAI Neo · 处理遮罩",
+    "inputs": { "image": { "name": "图像" } },
+    "outputs": { "0": { "name": "遮罩图像" } }
+  },
+  "NAINeoModelOption": {
+    "display_name": "NAI Neo · 模型选项",
+    "inputs": { "model": { "name": "模型" }, "option": { "name": "前置选项" } },
+    "outputs": { "0": { "name": "选项" } }
+  },
+  "NAINeoImg2ImgOption": {
+    "display_name": "NAI Neo · 图生图",
+    "inputs": { "image": { "name": "图像" }, "strength": { "name": "强度" }, "noise": { "name": "噪声" } },
+    "outputs": { "0": { "name": "选项" } }
+  },
+  "NAINeoInpaintingOption": {
+    "display_name": "NAI Neo · 局部重绘",
+    "inputs": { "image": { "name": "图像" }, "mask": { "name": "遮罩" }, "add_original_image": { "name": "叠加原图" } },
+    "outputs": { "0": { "name": "选项" } }
+  },
+  "NAINeoEncodeVibe": {
+    "display_name": "NAI Neo · Vibe 编码",
+    "description": "为 V4 或 V4.5 Vibe Transfer 编码一张参考图。",
+    "inputs": {
+      "image": { "name": "参考图" },
+      "model": { "name": "模型" },
+      "information_extracted": { "name": "信息提取量", "tooltip": "控制从参考图提取的信息量。修改此值需要重新进行一次付费编码。" },
+      "timeout_sec": { "name": "超时（秒）" }
+    },
+    "outputs": { "0": { "name": "Vibe 编码" } }
+  },
+  "NAINeoVibeTransferOption": {
+    "display_name": "NAI Neo · Vibe Transfer",
+    "inputs": {
+      "information_extracted": { "name": "信息提取量", "tooltip": "仅在连接 V3 原始参考图时使用。" },
+      "strength": { "name": "强度" },
+      "image": { "name": "V3 参考图" },
+      "option": { "name": "前置选项" },
+      "encoded_vibe": { "name": "V4 Vibe 编码" }
+    },
+    "outputs": { "0": { "name": "选项" } }
+  },
+  "NAINeoNetworkOption": {
+    "display_name": "NAI Neo · 网络选项",
+    "inputs": {
+      "ignore_errors": { "name": "忽略错误" }, "timeout_sec": { "name": "超时（秒）" },
+      "retry": { "name": "重试次数" }, "option": { "name": "前置选项" }
+    },
+    "outputs": { "0": { "name": "选项" } }
+  },
+  "NAINeoGenerate": {
+    "display_name": "NAI Neo · 生成图像",
+    "description": "使用 NovelAI 生成图像。结果返回 ComfyUI，不会自动保存。",
+    "inputs": {
+      "limit_opus_free": { "name": "限制为 Opus 免费额度", "tooltip": "将图像尺寸和步数限制在 Opus 免费额度内。" },
+      "width": { "name": "宽度" }, "height": { "name": "高度" },
+      "positive": { "name": "正面提示词" }, "negative": { "name": "负面提示词" },
+      "steps": { "name": "步数" }, "cfg": { "name": "提示词引导" },
+      "variety": { "name": "增加变化" }, "decrisper": { "name": "降低锐化" },
+      "smea": { "name": "SMEA" }, "sampler": { "name": "采样器" },
+      "scheduler": { "name": "噪声计划" }, "seed": { "name": "种子" },
+      "uncond_scale": { "name": "不良内容强度" }, "cfg_rescale": { "name": "提示词引导重缩放" },
+      "keep_alpha": { "name": "保留透明通道" }, "option": { "name": "选项" }
+    },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoRemoveBG": {
+    "display_name": "NAI Neo · 移除背景",
+    "inputs": { "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" } },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoLineArt": {
+    "display_name": "NAI Neo · 线稿",
+    "inputs": { "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" } },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoSketch": {
+    "display_name": "NAI Neo · 草图",
+    "inputs": { "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" } },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoColorize": {
+    "display_name": "NAI Neo · 上色",
+    "inputs": {
+      "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" },
+      "defry": { "name": "降噪等级" }, "prompt": { "name": "提示词" }
+    },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoEmotion": {
+    "display_name": "NAI Neo · 表情",
+    "inputs": {
+      "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" },
+      "mood": { "name": "情绪" }, "strength": { "name": "强度" }, "prompt": { "name": "提示词" }
+    },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoDeclutter": {
+    "display_name": "NAI Neo · 简化画面",
+    "inputs": { "image": { "name": "图像" }, "limit_opus_free": { "name": "限制为 Opus 免费额度" }, "ignore_errors": { "name": "忽略错误" } },
+    "outputs": { "0": { "name": "图像" } }
+  },
+  "NAINeoV4BasePrompt": {
+    "display_name": "NAI Neo · V4 基础提示词",
+    "inputs": { "base_caption": { "name": "基础描述" } },
+    "outputs": { "0": { "name": "提示词" } }
+  },
+  "NAINeoV4NegativePrompt": {
+    "display_name": "NAI Neo · V4 负面提示词",
+    "inputs": { "negative_caption": { "name": "负面描述" } },
+    "outputs": { "0": { "name": "负面提示词" } }
+  }
+}

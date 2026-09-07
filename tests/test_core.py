@@ -106,6 +106,15 @@ class NodeTests(unittest.TestCase):
         self.assertEqual(nodes.NAINeoGenerate.RETURN_TYPES, ("IMAGE",))
         self.assertEqual(nodes.NAINeoEncodeVibe.RETURN_TYPES, ("NAI_NEO_VIBE",))
 
+    def test_locales_cover_every_registered_node_and_input(self):
+        for language in ("en", "zh"):
+            translations = json.loads((ROOT / "locales" / language / "nodeDefs.json").read_text(encoding="utf-8"))
+            self.assertEqual(set(translations), set(nodes.NODE_CLASS_MAPPINGS))
+            for node_id, node_class in nodes.NODE_CLASS_MAPPINGS.items():
+                node_inputs = node_class.INPUT_TYPES()
+                input_names = set(node_inputs.get("required", {})) | set(node_inputs.get("optional", {}))
+                self.assertEqual(set(translations[node_id].get("inputs", {})), input_names, f"{language}: {node_id}")
+
     def test_generate_returns_image_without_writing_files(self):
         client = Mock()
         client.generate_image.return_value = image_zip()

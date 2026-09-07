@@ -12,6 +12,8 @@ git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git
 
 安装 `requirements.txt` 后重启 ComfyUI。节点位于 `NAI Neo` 分类。
 
+界面提供英文和简体中文翻译，跟随 ComfyUI 的语言设置自动切换。节点 ID、端口类型和下拉选项值不会随界面语言改变，因此切换语言不会影响工作流。
+
 ## 配置
 
 在 ComfyUI 的 `.env` 文件中设置 NovelAI Persistent API Token：
