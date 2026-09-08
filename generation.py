@@ -54,10 +54,12 @@ def build_generation_request(width, height, positive, negative, steps, cfg, decr
             action = "infill"
             image, mask, add_original_image = option["infill"]
             params["image"] = image_to_base64(resize_image(image, (width, height)))
-            params["mask"] = mask_to_base64(resize_mask(mask, (width, height), "4" in model))
+            params["mask"] = mask_to_base64(resize_mask(mask, (width, height), model.startswith(("nai-diffusion-4", "nai-diffusion-5"))))
             params["add_original_image"] = add_original_image
 
         raw_vibes = option.get("vibe", [])
+        if raw_vibes and model.startswith("nai-diffusion-5"):
+            raise ValueError("NAI Diffusion V5 does not support Vibe Transfer yet.")
         if raw_vibes and model.startswith("nai-diffusion-4"):
             raise ValueError("V4/V4.5 Vibe Transfer requires EncodeVibe. Connect its output to encoded_vibe instead of image.")
         for image, information_extracted, strength in raw_vibes:
@@ -66,6 +68,8 @@ def build_generation_request(width, height, positive, negative, steps, cfg, decr
             params["reference_strength_multiple"].append(strength)
 
         encoded_vibes = option.get("encoded_vibe", [])
+        if encoded_vibes and model.startswith("nai-diffusion-5"):
+            raise ValueError("NAI Diffusion V5 does not support Vibe Transfer yet.")
         for vibe, strength in encoded_vibes:
             if vibe["model"] != model:
                 raise ValueError("The vibe encoding model must match the generation model.")
@@ -83,9 +87,22 @@ def build_generation_request(width, height, positive, negative, steps, cfg, decr
         params["steps"] = min(steps, 28)
     if variety:
         params["skip_cfg_above_sigma"] = calculate_skip_cfg_above_sigma(params["width"], params["height"])
-    if sampler == "ddim" and model != "nai-diffusion-2":
-        params["sampler"] = "ddim_v3"
     if action == "infill" and model != "nai-diffusion-2":
-        model = f"{model}-inpainting"
+        model = "nai-diffusion-4-5-curated-inpainting" if model == "nai-diffusion-5-curated" else f"{model}-inpainting"
+    if sampler == "ddim" and model != "nai-diffusion-2":
+        params["sampler"] = "k_euler_ancestral" if model.startswith("nai-diffusion-5") else "ddim_v3"
+    if model.startswith("nai-diffusion-5"):
+        params["params_version"] = 4
+        params["noise_schedule"] = "karras"
+        params["dynamic_thresholding"] = False
+        params.pop("sm", None)
+        params.pop("sm_dyn", None)
+        params.pop("cfg_rescale", None)
+        params.pop("reference_image_multiple", None)
+        params.pop("reference_information_extracted_multiple", None)
+        params.pop("reference_strength_multiple", None)
+        if params["sampler"] == "k_euler_ancestral":
+            params["deliberate_euler_ancestral_bug"] = False
+            params["prefer_brownian"] = True
 
     return model, action, params

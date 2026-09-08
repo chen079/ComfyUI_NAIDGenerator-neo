@@ -1,6 +1,6 @@
 # ComfyUI_NAIDGenerator-neo
 
-面向 ComfyUI 的 NovelAI 图像生成节点。项目使用独立的节点命名空间和模块化实现，支持文本生成、图生图、局部重绘、V3/V4 Vibe Transfer 以及 Director Tools。
+面向 ComfyUI 的 NovelAI 图像生成节点。项目使用独立的节点命名空间和模块化实现，支持 NAI Diffusion V5、文本生成、图生图、局部重绘、V3/V4 Vibe Transfer 以及 Director Tools。
 
 ## 安装
 
@@ -86,6 +86,8 @@ ComfyUI/custom_nodes/ComfyUI_NAIDGenerator-neo/.env
 - `NAI Neo · VibeTransferOption`：设置 Vibe 强度并组合多个参考。
 - `NAI Neo · NetworkOption`：设置生成请求的超时、重试和错误忽略策略。
 - `NAI Neo · RemoveBG`、`LineArt`、`Sketch`、`Colorize`、`Emotion`、`Declutter`：NovelAI Director Tools。
+
+NAI Diffusion V5 Curated 和 V5 Full 可在 Model Option 中选择，默认模型仍为 V4.5 Full。V5 当前不支持 Vibe Transfer；V5 Curated 局部重绘会使用 NovelAI 当前提供的 V4.5 Curated Inpainting 模型。
 
 ## V4 / V4.5 Vibe Transfer
 

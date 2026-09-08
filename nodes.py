@@ -8,7 +8,8 @@ from .prompt_syntax import prompt_to_nai
 
 CATEGORY = "NAI Neo"
 V4_MODELS = ["nai-diffusion-4-curated-preview", "nai-diffusion-4-full", "nai-diffusion-4-5-curated", "nai-diffusion-4-5-full"]
-MODELS = ["nai-diffusion-2", "nai-diffusion-furry-3", "nai-diffusion-3", *V4_MODELS]
+V5_MODELS = ["nai-diffusion-5-curated", "nai-diffusion-5-full"]
+MODELS = ["nai-diffusion-2", "nai-diffusion-furry-3", "nai-diffusion-3", *V4_MODELS, *V5_MODELS]
 LIMIT_OPUS_FREE = "Limit image size and steps for free Opus generation."
 
 
