@@ -9,11 +9,6 @@
 ```bash
 git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git
 ```
-
-克隆后目录名称应为 `ComfyUI_NAIDGenerator-neo`。如果你是在仓库改名前安装的，本地旧目录不会随 GitHub 仓库自动改名，需要手动将 `comfyui_naidgenerator` 改为 `ComfyUI_NAIDGenerator-neo`。
-
-安装依赖并重启 ComfyUI：
-
 ```bash
 python -m pip install -r ComfyUI_NAIDGenerator-neo/requirements.txt
 ```
