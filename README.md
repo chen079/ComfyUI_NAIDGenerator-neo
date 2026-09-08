@@ -19,7 +19,7 @@ python -m pip install -r ComfyUI_NAIDGenerator-neo/requirements.txt
 
 ## 获取 NovelAI API Token
 
-NovelAI 在界面中将这里使用的密钥称为 **Persistent API Token**。它不是账号密码，也不是 Account ID。
+NovelAI 在界面中将这里使用的密钥称为 **Persistent API Token**。
 
 1. 打开 [NovelAI Stories](https://novelai.net/stories) 并登录，在页面左上角点击齿轮按钮，打开 **User Settings**。
 
@@ -33,9 +33,7 @@ NovelAI 在界面中将这里使用的密钥称为 **Persistent API Token**。�
 
    ![显示并复制 Persistent API Token](images/Step3.png)
 
-4. 立即妥善保存令牌。NovelAI 同一时间只允许一个 Persistent API Token；创建新令牌会使旧令牌失效。关闭弹窗后不能再次查看当前令牌，只能重新生成。
-
-不要把完整令牌发给其他人，也不要放进截图、工作流 JSON、Issue 或聊天记录。怀疑泄露时，应在 NovelAI 中重新生成令牌，并更新本插件的 `.env`。
+4. 妥善保存令牌。NovelAI 同一时间只允许一个 Persistent API Token；创建新令牌会使旧令牌失效。
 
 ## 配置 Token
 
@@ -69,8 +67,6 @@ NAI_ACCESS_TOKEN=pst-你的完整令牌
 ```text
 ComfyUI/custom_nodes/ComfyUI_NAIDGenerator-neo/.env
 ```
-
-项目只读取插件目录下的 `.env`，只支持 `NAI_ACCESS_TOKEN`，不会在导入节点时自动安装依赖，也不会通过用户名和密码登录。`.env` 已被 Git 忽略，不会随正常提交上传。
 
 如果启动时提示 `Set NAI_ACCESS_TOKEN`，请依次检查：
 
