@@ -65,9 +65,11 @@ class ClientTests(unittest.TestCase):
         self.assertIn("abc123", str(raised.exception))
 
     def test_token_is_required(self):
-        with patch.dict(nai_client.environ, {}, clear=True), patch.object(nai_client.dotenv, "load_dotenv"):
+        with patch.dict(nai_client.environ, {}, clear=True), patch.object(nai_client.dotenv, "load_dotenv") as load_dotenv:
             with self.assertRaisesRegex(RuntimeError, "NAI_ACCESS_TOKEN"):
                 nai_client.NovelAIClient.from_environment()
+        load_dotenv.assert_called_once_with(dotenv_path=nai_client.ENV_FILE)
+        self.assertEqual(nai_client.ENV_FILE, ROOT / ".env")
 
 
 class GenerationTests(unittest.TestCase):

@@ -1,6 +1,7 @@
 import base64
 import json
 from os import environ
+from pathlib import Path
 
 import dotenv
 import requests
@@ -8,6 +9,7 @@ from requests.adapters import HTTPAdapter, Retry
 
 
 IMAGE_URL = "https://image.novelai.net"
+ENV_FILE = Path(__file__).with_name(".env")
 
 
 def _raise_for_status(response, access_token, image=None):
@@ -38,10 +40,10 @@ class NovelAIClient:
 
     @classmethod
     def from_environment(cls):
-        dotenv.load_dotenv()
+        dotenv.load_dotenv(dotenv_path=ENV_FILE)
         token = environ.get("NAI_ACCESS_TOKEN")
         if not token:
-            raise RuntimeError("Set NAI_ACCESS_TOKEN in the ComfyUI .env file.")
+            raise RuntimeError(f"Set NAI_ACCESS_TOKEN in {ENV_FILE}.")
         return cls(token)
 
     def encode_vibe(self, image, model, information_extracted, timeout=120):

@@ -16,13 +16,19 @@ git clone https://github.com/chen079/ComfyUI_NAIDGenerator-neo.git
 
 ## 配置
 
-在 ComfyUI 的 `.env` 文件中设置 NovelAI Persistent API Token：
+在本插件目录的 `.env` 文件中设置 NovelAI Persistent API Token。可以复制 `.env.example` 后填写：
 
 ```dotenv
 NAI_ACCESS_TOKEN=你的令牌
 ```
 
-项目只支持 `NAI_ACCESS_TOKEN`，不会在导入节点时自动安装依赖，也不会通过用户名和密码登录。
+例如使用默认目录结构时，配置文件路径为：
+
+```text
+ComfyUI/custom_nodes/comfyui_naidgenerator/.env
+```
+
+项目只读取插件目录下的 `.env`，只支持 `NAI_ACCESS_TOKEN`，不会在导入节点时自动安装依赖，也不会通过用户名和密码登录。`.env` 已被 Git 忽略，不会随正常提交上传。
 
 ## 节点
 
